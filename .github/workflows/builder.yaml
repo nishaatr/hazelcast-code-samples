@@ -1,0 +1,23 @@
+name: Builder
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+      - name: Build and test
+        run: |
+          set -x
+          mvn --version --batch-mode --no-transfer-progress --quiet clean package "-Dhazelcast.enterprise.license.key=$HZ_LICENSEKEY" -DskipTests
